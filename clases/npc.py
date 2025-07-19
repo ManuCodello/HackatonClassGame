@@ -1,5 +1,4 @@
-# NPCs y enemigos
-# NPCs y enemigos
+# npc.py
 
 class NPC:
     def __init__(self, nombre, dialogo, presentacion):
@@ -7,7 +6,7 @@ class NPC:
         self.dialogo = dialogo  # diccionario: {pregunta: respuesta, pregunta: respuesta}
         self.presentacion = presentacion
         self.acertijo_resuelto = False
-    
+
     # solamente para presentarse.
     def presentarse(self):
         print(f"{self.nombre}: {self.presentacion}")
@@ -16,13 +15,13 @@ class NPC:
                 print(frase)
         else:
             print(self.presentacion)    
-            
+
     # Funcion de acertijo con el los dialogos y esperando la respuestas correctas
     def acertijo(self):
         if self.acertijo_resuelto:
             print(f"{self.nombre}: Ya resolviste. Bien hecho! continua...")
             return
-        
+
         print(f"{self.nombre}: Responde correctamente...")
         for pregunta, respuesta_acertada in self.dialogo.items():
             print(f"{self.nombre}: {pregunta}")

@@ -1,4 +1,6 @@
-# Mini-juegos
+# minijuegos.py
+
+
 import time
 import os
 
@@ -15,7 +17,7 @@ class MiniJuegos:
         print('Si G=7, U=21, E=5, R=18, A=1 ¿Cuál es la suma del valor de las letras en la palabra \'GUERRA\'?')
         print('(Pista: suma los valores de cada letra segun A=1, B=2, C=3)')
         print("a) 70\nb) 65\nc) 73")
-        
+
         while True:
             ingreso = input('Tu respuesta: ').lower()
             if ingreso not in ['a', 'b', 'c']:
@@ -37,7 +39,7 @@ class MiniJuegos:
 
         print('Estas en guerra, y tenes que salvar tu base.')
         print('Desconecta la bomba adivinando el numero de cable a desconectar.')
-        
+
         while intentos_usados < intentos_maximos:
             try:
                 intento = int(input(f'Ingresa un numero del 1 al 10 (intento {intentos_usados + 1}/{intentos_maximos}): '))
@@ -66,20 +68,20 @@ class MiniJuegos:
     def juego_memoria_visual(self):
         print('\n🧠 Nivel 3: Memoria Visual')
         palabras = ['tanque', 'misil', 'avion', 'radar', 'trinchera']
-        
+
         print('Memoriza estas palabras de guerra:')
         print('📝 ' + ' | '.join(palabras))
         print('\nTienes 5 segundos para memorizarlas...')
-        
+
         for i in range(5, 0, -1):
             print(f'⏰ {i}...')
             time.sleep(1)
-            
+
         self.limpiar_pantalla()
 
         print('🎯 Escribí las palabras que recordas (una por una).')
         print('📝 Escribí "fin" cuando termines.')
-        
+
         palabras_recordadas = []
         while True:
             palabra = input('Palabra: ').strip().lower()
@@ -94,7 +96,7 @@ class MiniJuegos:
         print(f'\n📊 Palabras correctas: {puntaje} de {len(palabras)}')
         print(f'📝 Recordaste: {", ".join(palabras_recordadas)}')
         print(f'✅ Correctas: {[p for p in palabras_recordadas if p in palabras]}')
-        
+
         if puntaje >= 3:
             print('🎉 ¡Ganaste! Excelente memoria.')
             return True

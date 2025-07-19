@@ -1,4 +1,4 @@
-# Punto de entrada del proyecto
+
 
 # main.py
 # --------Aca inicia todo el juego-------- #

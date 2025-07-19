@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+#
+# juego.py
 
 """
 Clase principal del juego que gestiona toda la lógica de flujo,
