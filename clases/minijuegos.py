@@ -13,19 +13,23 @@ class MiniJuegos:
         print(' Nivel 1: Código Secreto')
         print('Tenes que decifrar\nSi G=7, U=21, E=5, R=18, A=1 ¿Cuál es la suma del valor de las letras en la palabra ‘GUERRA’?\n(Pista: suma los valores de cada letra segun A=1, B=2, C=3)')
         print("a) 70\nb) 65\nc) 73")
-        ingreso = input('Tu respuesta: ').lower()
-        if ingreso == 'a':
-            print('Correcto')
-            self.puntaje_total += 1
-            return True
-        else:
-            print('Incorrecto fin del juego')
-            return False
+        while True:
+            ingreso = input('Tu respuesta: ').lower()
+            if ingreso not in ['a', 'b', 'c']:
+                print('tenes que ingresar ( A, B, o C )')
+                continue
+            elif ingreso == 'a':
+                print('correcto')
+                self.puntaje_total += 1
+                return True
+            else:
+                print('Incorrecto fin del juego')
+                return False
 
     def juego_numerico_magico(self):
         print('\n Nivel 2: numero magico')
         numero_secreto = 7
-        intentos_maximos = 3
+        intentos_maximos = 5
         intentos_usados = 0
 
         while intentos_usados < intentos_maximos:
@@ -77,7 +81,7 @@ class MiniJuegos:
             return False
 
     def jugar(self):
-        print(' Bienvenido al Juego de los 3 Niveles\n')
+        print(' Bienvenido\n')
 
         if not self.juego_codigo_secreto():
             return
