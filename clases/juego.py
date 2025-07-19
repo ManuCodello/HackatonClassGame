@@ -1,5 +1,4 @@
-#
-# juego.py
+# juego.py - Versión Corregida
 
 """
 Clase principal del juego que gestiona toda la lógica de flujo,
@@ -31,6 +30,14 @@ class Juego:
         self.juego_terminado = False
         self.resultado_final = None
         
+        # Control de minijuegos para portales - NUEVO
+        self.minijuegos_completados = set()  # Almacena qué minijuegos ya se completaron
+        self.minijuegos_disponibles = {
+            1: "codigo_secreto",
+            2: "numerico_magico", 
+            3: "memoria_visual"
+        }
+        
         # Límites de pasos por mapa
         self.pasos_por_mapa = {
             1: 100,  # mapa_1 - base inicial
@@ -50,35 +57,35 @@ class Juego:
             1: {
                 "nombre": "🏠 Base Paraguaya - Punto de Partida",
                 "descripcion": "Tu base de operaciones en las ruinas de Asunción",
-                "objetivo": "Explora y encuentra el portal al siguiente sector",
+                "objetivo": "Habla con Santi Penna y usa el portal",
                 "emoji_especial": "🏠",
                 "tipo": "base"
             },
             2: {
                 "nombre": "🏢 Sector Central - Zona de Combate",
                 "descripcion": "Ruinas del centro de la ciudad, lleno de peligros",
-                "objetivo": "Derrota al NPC y activa el portal",
+                "objetivo": "Encuentra a Sebastian Canoso y completa su desafío",
                 "emoji_especial": "⚡",
                 "tipo": "ciudad"
             },
             3: {
                 "nombre": "🏥 Sector Médico - Hospital en Ruinas",
                 "descripcion": "Antiguos hospitales convertidos en fortalezas",
-                "objetivo": "Supera el desafío del superviviente médico",
+                "objetivo": "Busca a Jorge Molina jr. y ayúdalo con el pendrive",
                 "emoji_especial": "💊",
                 "tipo": "ciudad"
             },
             4: {
                 "nombre": "🏭 Sector Industrial - Puerto Destruido",
-                "descripción": "Zona industrial con recursos valiosos",
-                "objetivo": "Último desafío antes del laberinto final",
+                "descripcion": "Zona industrial con recursos valiosos",  # CORREGIDO: era 'descripción' con tilde
+                "objetivo": "Encuentra a Francesco y supera su prueba de memoria",
                 "emoji_especial": "🛠️",
                 "tipo": "ciudad"
             },
             5: {
                 "nombre": "🌀 Laberinto del Apocalipsis - Escape Final",
                 "descripcion": "El laberinto final que lleva a la salvación",
-                "objetivo": "Encuentra la salida 🌀 antes de que se agote el tiempo",
+                "objetivo": "Encuentra al Hacker y escapa por la salida 🌀",
                 "emoji_especial": "🗝️",
                 "tipo": "laberinto"
             }
@@ -97,6 +104,7 @@ class Juego:
         print("╠" + "═" * 78 + "╣")
         print(f"║ ❤️  Vidas: {self.vidas}/{self.vidas_maximas} │ 🎯 Mapa: {self.stage_actual}/5 │ 👟 Pasos: {self.pasos_actuales}/{self.pasos_por_mapa[self.stage_actual]} ║")
         print(f"║ 📍 Posición: ({self.jugador.x}, {self.jugador.y}) │ 🎲 Objetivo: {stage_info['objetivo'][:35]}... ║")
+        print(f"║ 🎮 Minijuegos: {len(self.minijuegos_completados)}/3 │ 🗝️  Llaves: {self.jugador.llaves}/3 ║")
         print("╚" + "═" * 78 + "╝")
         print()
     
@@ -140,9 +148,8 @@ class Juego:
                 if self.mapa_actual.grid[i][j] == '⬛':
                     break
         
-        # Cargar NPCs si es un mapa de ciudad
-        if tipo_mapa == "ciudad":
-            self.crear_npc_para_mapa(numero_mapa)
+        # Cargar NPCs específicos según el mapa
+        self.crear_npc_para_mapa(numero_mapa)
         
         # Mensaje de transición
         print(f"\n🌍 Entrando a: {stage_info['nombre']}")
@@ -152,26 +159,65 @@ class Juego:
         input("Presiona ENTER para continuar...")
     
     def crear_npc_para_mapa(self, numero_mapa):
-        """Crea NPCs específicos para cada mapa"""
-        if numero_mapa == 2:
+        """Crea NPCs específicos para cada mapa con los personajes requeridos"""
+        if numero_mapa == 1:
+            # Santi Penna en el mapa base
             npc = NPC(
-                "Soldado Superviviente",
-                {"¿Cuál fue el primer presidente de Paraguay?": "carlos antonio lopez"},
-                "¡Alto! Soy el guardián de este sector. Responde mi pregunta para continuar."
+                "Santi Penna",
+                {"¿Estás listo para la misión?": "si"},
+                [
+                    "¿Vos sos el nuevo? Te esperábamos.",
+                    "Las calles están más tranquilas que de costumbre... demasiado tranquilas.",
+                    "El hacker fue capturado cerca del río. Pero antes envió una señal.",
+                    "Sebastián Canoso tiene la primera pista. Buscalo en la ciudad."
+                ]
+            )
+            
+        elif numero_mapa == 2:
+            # Sebastian Canoso
+            npc = NPC(
+                "Sebastian Canoso",
+                {"¿Cuál es la capital de Paraguay?": "asuncion"},
+                [
+                    "Santi me avisó que vendrías.",
+                    "La señal que mandó no la pudimos descifrar por completo, ayudanos a descifrar el codigo secreto adivinando lo siguiente"
+                ]
             )
             
         elif numero_mapa == 3:
+            # Jorge Molina jr.
             npc = NPC(
-                "Doctor de Guerra",
-                {"¿Qué órgano bombea la sangre?": "corazon"},
-                "Necesito verificar tus conocimientos médicos básicos antes de dejarte pasar."
+                "Jorge Molina jr.",
+                {"¿Cuántos bits tiene un byte?": "8"},
+                [
+                    "¿Vos venís por la señal?",
+                    "Los rusos dejaron bombas por todas partes ayudame a modificar este pendrive, porque yo no lo pude entender."
+                ]
             )
             
         elif numero_mapa == 4:
+            # Francesco Solono Virgolini
             npc = NPC(
-                "Ingeniero Industrial", 
-                {"¿Cuál es el metal más común en la industria?": "hierro"},
-                "Este sector industrial requiere conocimientos técnicos. Demuestra que sabes."
+                "Francesco Solono Virgolini",
+                {"¿En qué año fue la Guerra del Chaco?": "1932"},
+                [
+                    "Shhh… bajá la voz. Están por todas partes.",
+                    "Solo te dejaré pasar si sé que no morirás como los niños 200 años atrás.",
+                    "Memorizate estas palabras, y si escuchás a alguien gritar ya sabés que hacer..."
+                ]
+            )
+            
+        elif numero_mapa == 5:
+            # El Hacker
+            npc = NPC(
+                "El Hacker",
+                {"¿Estás listo para escapar?": "si"},
+                [
+                    "...¿Hola?... ¿Me escuchás?",
+                    "Gracias por venir.",
+                    "Ahora que ya podemos enfocarnos en esta guerra nuevamente (cof.. cof...).",
+                    "Apurate. Tupã está esperando tu llamado final."
+                ]
             )
         else:
             return
@@ -249,9 +295,41 @@ class Juego:
         return False
     
     def procesar_portal(self):
-        """Procesa el uso de un portal"""
+        """Procesa el uso de un portal - AHORA REQUIERE MINIJUEGO OBLIGATORIO"""
         if self.stage_actual < 5:
-            # Avanzar al siguiente mapa
+            # Verificar si necesita hacer minijuego para avanzar
+            if self.stage_actual in self.minijuegos_disponibles:
+                minijuego_tipo = self.minijuegos_disponibles[self.stage_actual]
+                
+                # Si ya completó este minijuego, puede pasar
+                if minijuego_tipo in self.minijuegos_completados:
+                    print(f"✅ Ya completaste el minijuego de este sector.")
+                else:
+                    # Debe completar el minijuego para usar el portal
+                    print(f"🔒 Portal bloqueado. Debes completar el minijuego para avanzar.")
+                    print(f"🎮 Iniciando minijuego obligatorio...")
+                    input("Presiona ENTER para comenzar...")
+                    
+                    exitoso = self.ejecutar_minijuego_especifico(minijuego_tipo)
+                    
+                    if exitoso:
+                        print("🎉 ¡Minijuego completado! Portal desbloqueado.")
+                        self.minijuegos_completados.add(minijuego_tipo)
+                        self.jugador.llaves += 1
+                        input("Presiona ENTER para usar el portal...")
+                    else:
+                        print("💔 Minijuego fallado. Portal sigue bloqueado.")
+                        self.vidas -= 1
+                        print(f"Vidas restantes: {self.vidas}")
+                        
+                        if self.vidas <= 0:
+                            self.juego_terminado = True
+                            self.resultado_final = "derrota"
+                        
+                        input("Presiona ENTER para continuar...")
+                        return
+            
+            # Si llegó aquí, puede avanzar al siguiente mapa
             print(f"🌀 ¡Portal activado! Avanzando al mapa {self.stage_actual + 1}...")
             input("Presiona ENTER para continuar...")
             self.cargar_mapa(self.stage_actual + 1)
@@ -259,6 +337,17 @@ class Juego:
             # Victoria en el laberinto final
             self.juego_terminado = True
             self.resultado_final = "victoria"
+    
+    def ejecutar_minijuego_especifico(self, tipo_minijuego):
+        """Ejecuta un minijuego específico"""
+        if tipo_minijuego == "codigo_secreto":
+            return self.minijuegos.juego_codigo_secreto()
+        elif tipo_minijuego == "numerico_magico":
+            return self.minijuegos.juego_numerico_magico()
+        elif tipo_minijuego == "memoria_visual":
+            return self.minijuegos.juego_memoria_visual()
+        else:
+            return False
     
     def verificar_limites_pasos(self):
         """Verifica si el jugador ha excedido el límite de pasos"""
@@ -299,35 +388,52 @@ class Juego:
         return None
     
     def procesar_minijuego_extra(self):
-        """Procesa los minijuegos especiales del sistema MiniJuegos"""
+        """Procesa los minijuegos extras opcionales"""
         print("🎮 ¡Desafío especial desbloqueado!")
-        print("Selecciona tu desafío:")
-        print("1. Código Secreto")
-        print("2. Número Mágico") 
-        print("3. Memoria Visual")
+        
+        # Mostrar solo minijuegos no completados
+        opciones_disponibles = []
+        print("Minijuegos disponibles:")
+        
+        if "codigo_secreto" not in self.minijuegos_completados:
+            opciones_disponibles.append(("1", "codigo_secreto", "Código Secreto"))
+            print("1. Código Secreto")
+            
+        if "numerico_magico" not in self.minijuegos_completados:
+            opciones_disponibles.append(("2", "numerico_magico", "Número Mágico"))
+            print("2. Número Mágico")
+            
+        if "memoria_visual" not in self.minijuegos_completados:
+            opciones_disponibles.append(("3", "memoria_visual", "Memoria Visual"))
+            print("3. Memoria Visual")
+        
+        if not opciones_disponibles:
+            print("🏆 ¡Ya completaste todos los minijuegos!")
+            input("Presiona ENTER para continuar...")
+            return
         
         while True:
-            try:
-                opcion = int(input("Elige tu desafío (1-3): "))
-                if 1 <= opcion <= 3:
+            opcion = input("Elige tu desafío: ").strip()
+            minijuego_seleccionado = None
+            
+            for num, tipo, nombre in opciones_disponibles:
+                if opcion == num:
+                    minijuego_seleccionado = tipo
                     break
-                else:
-                    print("Opción inválida. Elige 1, 2 o 3.")
-            except ValueError:
-                print("Por favor ingresa un número válido.")
+            
+            if minijuego_seleccionado:
+                break
+            else:
+                print("Opción inválida. Intenta de nuevo.")
         
-        exitoso = False
-        if opcion == 1:
-            exitoso = self.minijuegos.juego_codigo_secreto()
-        elif opcion == 2:
-            exitoso = self.minijuegos.juego_numerico_magico()
-        elif opcion == 3:
-            exitoso = self.minijuegos.juego_memoria_visual()
+        exitoso = self.ejecutar_minijuego_especifico(minijuego_seleccionado)
         
         if exitoso:
-            print("🎉 ¡Excelente! Bonus completado.")
+            print("🎉 ¡Excelente! Minijuego completado.")
             print("🎁 Recuperas una vida extra!")
+            self.minijuegos_completados.add(minijuego_seleccionado)
             self.vidas = min(self.vidas + 1, self.vidas_maximas)
+            self.jugador.llaves += 1
         else:
             print("💔 Minijuego fallado, pero puedes continuar.")
             
