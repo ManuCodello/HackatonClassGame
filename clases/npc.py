@@ -2,14 +2,11 @@
 
 
 class NPC:
-    def __init__(self, nombre, x, y, dialogo, presentacion):
+    def __init__(self, nombre, dialogo, presentacion):
         self.nombre = nombre
-        self.x = x
-        self.y = y
         self.dialogo = dialogo
         self.presentacion = presentacion
         self.acertijo_resuelto = False
-
 
     # solamente para presentarse.
     def presentarse(self):
@@ -28,7 +25,7 @@ class NPC:
         
         print(f"{self.nombre}: Responde correctamente.")
 
-        for pregunta, respuesta_acertada in self.dialogo.item():
+        for pregunta, respuesta_acertada in self.dialogo.items():
             print(f"{self.nombre}: {pregunta}")
             respuesta = input("Tu respuesta: ").strip().lower()
             if respuesta_acertada == respuesta:
@@ -36,9 +33,5 @@ class NPC:
             else:
                 print(f"{self.nombre}: malmal bro")
                 return
-            
-            
-    def entregar_llave(self):
 
-        pass
 
