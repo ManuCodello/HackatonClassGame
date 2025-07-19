@@ -28,10 +28,10 @@ Tu objetivo es avanzar resolviendo los desafíos y llegar al último mapa.
 
 ## 🕹️ ¿Cómo se juega?
 
-- Te movés por el mapa ingresando las teclas: `W` (arriba), `A` (izquierda), `S` (abajo), `D` (derecha).  
+- Te movés por el mapa ingresando las teclas: W (arriba), A (izquierda), S (abajo), D (derecha).  
 - Si llegás a un **NPC**, podés interactuar y resolver su reto.  
 - Al vencer al NPC, aparece un **portal** que te permite viajar al siguiente mapa.  
-- No podés pasar por los **obstáculos** (`🚧`).  
+- No podés pasar por los **obstáculos** (🚧).  
 - El juego termina cuando llegás al **último mapa** o si perdes todas tus **vidas**.
 
 
@@ -45,4 +45,4 @@ cd nombre_del_repo
 3. Ejecutá el juego:
 python main.py
 
-✳️ **Nota**: Reemplazá `tu_usuario` y `nombre_del_repo` con tu nombre de usuario y el nombre real de este repositorio en GitHub.
+✳️ **Nota**: Reemplazá 'tu_usuario' y 'nombre_del_repo' con tu nombre de usuario y el nombre real de este repositorio en GitHub.
