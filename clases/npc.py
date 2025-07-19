@@ -26,8 +26,19 @@ class NPC:
             print(f"{self.nombre}: Lo resolviste, Toma")
             return
         
-        print(f"{self.nombre}: ")
+        print(f"{self.nombre}: Responde correctamente.")
 
+        for pregunta, respuesta_acertada in self.dialogo.item():
+            print(f"{self.nombre}: {pregunta}")
+            respuesta = input("Tu respuesta: ").strip().lower()
+            if respuesta_acertada == respuesta:
+                print("ok")
+            else:
+                print(f"{self.nombre}: malmal bro")
+                return
+            
+            
     def entregar_llave(self):
+
         pass
 
