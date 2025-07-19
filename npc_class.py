@@ -1,19 +1,17 @@
 class NPC:
-    def __init__(self, nombre, x, y):
+    def __init__(self, nombre, x, y, dialogo, presentacion):
         self.nombre = nombre
         self.x = x
         self.y = y
-        self.dialogo = []
+        self.dialogo = dialogo
+        self.presentacion = presentacion
 
-    def hablar(self,):
-
+    def presentarse(self, jugador):
         pass
 
-    def acertijo(self,):
+    def acertijo(self, jugador):
         pass
 
-    def entregar_llave(self,):
+    def entregar_llave(self, jugador):
         pass
 
-    def moverse(self,):
-        pass
